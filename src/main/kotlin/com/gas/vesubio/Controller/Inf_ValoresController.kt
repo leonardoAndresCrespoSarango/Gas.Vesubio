@@ -1,5 +1,4 @@
 package com.gas.vesubio.Controller
-
 import com.gas.vesubio.Model.Inf_Valores
 import com.gas.vesubio.Service.Inf_ValoresService
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +13,6 @@ class Inf_ValoresController {
     @GetMapping("/{id}")
     fun findInfoValoresById(@PathVariable("var_id") var_id: Long): ResponseEntity<Inf_Valores?> {
         val infoValores = valoresService!!.findValueById(var_id)
-
         return if (infoValores != null) {
                 ResponseEntity.ok(infoValores)
             } else {
@@ -26,7 +24,7 @@ class Inf_ValoresController {
         val savedInfoValores = valoresService!!.saveValues(infoValores)
         return ResponseEntity.ok(savedInfoValores)
     }*/
-    @GetMapping("/todos")
+    @GetMapping("/listarAll")
     fun findAllInfoValores(): ResponseEntity<List<Inf_Valores>> {
         val infoValoresList = valoresService!!.findAllValues()
         return ResponseEntity.ok(infoValoresList)

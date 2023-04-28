@@ -4,10 +4,10 @@ import com.gas.vesubio.Model.Inf_Valores
 import org.springframework.transaction.annotation.Transactional
 
 interface  Inf_ValoresService {
-    //    false lectura y escritura
+
     @Transactional(readOnly = false)
     fun saveValues(valores: Inf_Valores):Inf_Valores
-    //   True para solo lecura
+
     @Transactional(readOnly = true)
     fun findValueById(var_id:Long):Inf_Valores?
 
