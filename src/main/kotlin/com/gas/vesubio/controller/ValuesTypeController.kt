@@ -19,7 +19,7 @@ class ValuesTypeController {
         return try {
             val resultFind = iValuesTypeService!!.findValueTypeById(valueTypeId = valueTypeId)
             if (resultFind == null){
-                response["message"]="no se encontro fecha con el id: $valueTypeId"
+                response["message"]="no se encontro ningun dato con el id: $valueTypeId"
                 ResponseEntity<Map<String, Any>>(response, HttpStatus.NOT_FOUND)
             } else {
                 response["message"]="Datos encontrados"
@@ -37,12 +37,22 @@ class ValuesTypeController {
     fun findAllValues(): Any{
         val response=HashMap<String, Any>()
         return try {
-
-
-        }catch (e: Exception){
-
+            val resultFind = iValuesTypeService!!.findAllValuesType()
+            if (resultFind.isEmpty()){
+                response["message"]="no se encontraron valores"
+                ResponseEntity<Map<String, Any>>(response, HttpStatus.NOT_FOUND)
+            } else {
+                response["message"]="Datos encontrados"
+                response["result"]=resultFind
+                ResponseEntity<Map<String, Any>>(response, HttpStatus.OK)
+            }
+        } catch (e: Exception){
+            response["message"]="Error en el servidor"
+            response["result"]="${e.message} : ${e.cause}"
+            ResponseEntity<Map<String, Any>>(response, HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
+
 
 
 
