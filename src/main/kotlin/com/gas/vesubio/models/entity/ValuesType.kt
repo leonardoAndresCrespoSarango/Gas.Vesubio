@@ -1,4 +1,4 @@
-package com.gas.vesubio.Model
+package com.gas.vesubio.models.entity
 
 import java.io.Serializable
 import javax.persistence.Column
@@ -9,12 +9,15 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "Inf_Inf_Valores")
-class Inf_Valores: Serializable {
+@Table(name = "values_type")
+class ValuesType: Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "var_id")
-    val id: Long? = 0
-    @Column(name = "var_descrip", nullable = false)
-    val descripcion:String? = null
+    @Column(name = "values_tpe_id")
+    val id: Long = 0
+
+    @Column(name = "description", nullable = false)
+    val description:String? = null
+
 }
