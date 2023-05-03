@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional
 interface IValuesTypeService {
     /**
      * @author Leonardo Crespo
-     *consist in creation of class (Interface) to do the service that can use
+     *consist in creation of class (Interface) to do the service that can use this methods
      */
 
     // method that consist about cant only read but can read / write

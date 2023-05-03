@@ -13,6 +13,10 @@ class ValuesTypeController {
     @Autowired
     private val iValuesTypeService:IValuesTypeService?=null
 
+    /**
+     * service that consist to find values with ID.
+     * if it find de correct id show
+     */
     @GetMapping("/findValuesTypeById/{valueTypeId}")
     fun findValuesTypeById(@PathVariable("valueTypeId") valueTypeId: Long): Any{
         val response=HashMap<String, Any>()
