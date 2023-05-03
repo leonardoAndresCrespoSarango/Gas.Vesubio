@@ -15,7 +15,8 @@ class ValuesTypeController {
 
     /**
      * service that consist to find values with ID.
-     * if it find de correct id show
+     * if it find de correct id  with de ID that you put show: no se encontro ningun dato con el id
+     * but if it dosent find the ID
      */
     @GetMapping("/findValuesTypeById/{valueTypeId}")
     fun findValuesTypeById(@PathVariable("valueTypeId") valueTypeId: Long): Any{
