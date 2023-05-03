@@ -14,9 +14,9 @@ class ValuesTypeController {
     private val iValuesTypeService:IValuesTypeService?=null
 
     /**
-     * service that consist to find values with ID.
-     * if it find de correct id  with de ID that you put show: no se encontro ningun dato con el id
-     * but if it dosent find the ID
+     * service that consist of find values with ID.
+     * if it finds de correct id  with de ID that you put show: no se encontro ningun dato con el id
+     * but if it doesn't find the ID the service show: Datos encontrados
      */
     @GetMapping("/findValuesTypeById/{valueTypeId}")
     fun findValuesTypeById(@PathVariable("valueTypeId") valueTypeId: Long): Any{
@@ -37,6 +37,10 @@ class ValuesTypeController {
             ResponseEntity<Map<String, Any>>(response, HttpStatus.OK)
         }
     }
+
+    /**
+     *
+     */
 
     @GetMapping("/findAllValues")
     fun findAllValues(): Any{
