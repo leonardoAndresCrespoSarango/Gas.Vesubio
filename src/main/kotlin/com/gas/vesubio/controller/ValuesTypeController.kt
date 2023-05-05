@@ -63,13 +63,4 @@ class ValuesTypeController {
         }
     }
 
-
-
-
-
-
-
-
-
-
 }
