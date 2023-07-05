@@ -193,11 +193,11 @@ class ValueController {
                 //iValueServices!!.saveAllValues(registerValuesList)
                 //println(registerValuesList.size)
 
-                /*if (registerValuesList.isNotEmpty()) {
+                if (registerValuesList.isNotEmpty()) {
                     // Guardar los registros restantes en la lista
-                    println("guardar")
+                    //println("guardar")
                     iValueServices!!.saveAllValues(registerValuesList)
-                }*/
+                }
             } else {
                 println("Error al obtener los datos de RegisterDate")
                 response["message"] = "Error al obtener los datos de RegisterDate"
@@ -208,7 +208,9 @@ class ValueController {
         } finally {
             workbook.close()
         }
+        println("Cargado satisfactoriamente")
     }
+
 }
 
 
