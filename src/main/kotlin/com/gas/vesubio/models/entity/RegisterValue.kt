@@ -34,12 +34,12 @@ class RegisterValue: Serializable {
      * Variable value guarda datos de la empresa Gas Vesubio
      */
     @Column(name = "value")
-    val value:Double?=0.0
+    var value:Double?=0.0
     /**
      *
      */
     @Column(name = "date_value", nullable = false)
-    val date: Date?=null
+    var date: Date?=null
     /**
      * Existe una relacion 1-muchos por lo cual  esta tabla guarda los datos de la
      * tabla RegisterDate.
@@ -47,7 +47,7 @@ class RegisterValue: Serializable {
      */
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "date_id")
-    val registerDate:RegisterDate?=null
+    var registerDate:RegisterDate?=null
     /**
      * Existe una relacion 1-muchos por lo cual  esta tabla guarda los datos de la
      * tabla Inf_Value.
@@ -55,6 +55,6 @@ class RegisterValue: Serializable {
      */
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "value_type_id")
-    val valuesType:ValuesType?=null
+    var valuesType:ValuesType?=null
 
 }

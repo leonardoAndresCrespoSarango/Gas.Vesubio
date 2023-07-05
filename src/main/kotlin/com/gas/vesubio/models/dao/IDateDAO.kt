@@ -2,6 +2,7 @@ package com.gas.vesubio.models.dao
 
 import com.gas.vesubio.models.entity.RegisterDate
 import org.springframework.data.repository.CrudRepository
+import java.util.*
 
 /**
  * este codigo es una interfaz de Kotlin llamada "IDateDAO" que amplía la interfaz de Spring Data "CrudRepository" con los tipos genéricos
@@ -15,5 +16,9 @@ import org.springframework.data.repository.CrudRepository
  * La interfaz no proporciona ninguna implementación de estos métodos
  */
 interface IDateDAO: CrudRepository<RegisterDate, Long> {
+    /**
+     * Para buscar si existe una fecha en la base de datos
+     */
+    fun findByDate(date: Date): RegisterDate?
 
 }

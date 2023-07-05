@@ -13,6 +13,11 @@ class ValueServicesImpl:IValuesServices {
         return iValuesDao!!.save(value)
     }
 
+    override fun saveAllValues(registerValues: List<RegisterValue>) {
+        iValuesDao!!.saveAll(registerValues)
+    }
+
+
     override fun findValueById(valueId: Long): RegisterValue {
         return iValuesDao!!.findById(valueId).orElse(null)
     }
@@ -20,4 +25,5 @@ class ValueServicesImpl:IValuesServices {
     override fun findAll(): Iterable<RegisterValue> {
         return iValuesDao!!.findAll()
     }
+
 }

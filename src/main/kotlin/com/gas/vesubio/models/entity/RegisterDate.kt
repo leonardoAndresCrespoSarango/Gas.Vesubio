@@ -5,6 +5,7 @@
 package com.gas.vesubio.models.entity
 
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -47,13 +48,35 @@ class RegisterDate: Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "date_id")
-    val id: Long? = 0
+    var id: Long? = 0
 
     /**
      * Register Date.
      */
     @Column(name = "date", nullable = false)
-    val date: Date? = null
+    var date: Date?=null
+    //val date: Date? = null
+
+
+
+    constructor()
+    constructor(date: Date) {
+        this.date = date
+
+    }
+    constructor(id: Long?, date: Date) {
+        this.id = id
+        this.date = date
+    }
+
+    override fun toString(): String {
+        return "RegisterDate(id=$id, date=$date)"
+    }
+        constructor (date: LocalDateTime )
+
+
+
+
 
 }
 

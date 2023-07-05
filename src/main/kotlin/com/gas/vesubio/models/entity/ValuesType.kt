@@ -33,12 +33,20 @@ class ValuesType: Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "values_tpe_id")
-    val id: Long = 0
+    var id: Long = 0
 
     /**
      * Description of Value Type
      */
     @Column(name = "description", nullable = false)
-    val description:String? = null
+    var description:String? = null
+
+    constructor(id: Long?, description: String) {
+        if (id != null) {
+            this.id = id
+        }
+        this.description = description
+    }
+
 
 }
