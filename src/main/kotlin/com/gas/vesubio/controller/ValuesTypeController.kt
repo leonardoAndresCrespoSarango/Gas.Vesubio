@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/valuesTypeController")
+
 class ValuesTypeController {
     //interface ValuesTypeService
     @Autowired
