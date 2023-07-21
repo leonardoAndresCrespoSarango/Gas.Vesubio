@@ -5,9 +5,7 @@ import com.gas.vesubio.models.entity.RegisterValue
 import com.gas.vesubio.models.entity.ValuesType
 import com.gas.vesubio.models.services.dates.DatesServicesImpl
 import com.gas.vesubio.models.services.values.IValuesServices
-import com.gas.vesubio.models.services.values.ValueServicesImpl
 import com.monitorjbl.xlsx.StreamingReader
-import org.apache.poi.ss.formula.functions.Value
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.springframework.beans.factory.annotation.Autowired
@@ -35,11 +33,10 @@ class ValueController {
 
     @Autowired
     private val iValueServices:IValuesServices?=null
-    private val valueService:ValueServicesImpl?=null
-    private val v:ValueServicesImpl?=null
+    private val datesServicesImpl: DatesServicesImpl?=null
+    private val dateController: DateController?=null
+    //private val iDatesServices:IDatesServices?=null
 
-    //@Autowired
-    //private lateinit var valueController: ValueController
     @Autowired
     private lateinit var controllerDate: DateController
     @Autowired
@@ -107,30 +104,6 @@ class ValueController {
 
     }
 
-    @GetMapping("/all")
-    fun getAllValues(): ResponseEntity<List<RegisterValue>> {
-        val values = iValueServices!!.getAllValues()
-        return ResponseEntity.ok(values)
-    }
-
-
-
-    @GetMapping("/by-date")
-    fun getValuesByDate(@RequestParam("date") dateString: String): ResponseEntity<Map<String, List<Double>>> {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val date = dateFormat.parse(dateString)
-        val valueMap = iValueServices!!.getValuesByDate(date)
-        return ResponseEntity.ok(valueMap)
-    }
-
-
-    /*@GetMapping("/by-date30")
-    fun getValuesByDate30(@RequestParam("date") dateString: String): ResponseEntity<Map<String, List<Double>>> {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val date = dateFormat.parse(dateString)
-        val valueMap = iValueServices!!.getValuesByDate30(date)
-        return ResponseEntity.ok(valueMap)
-    }*/
     @PostMapping("/Import")
     fun ImportData(@RequestParam("file") file: MultipartFile) {
         val response = HashMap<String, Any>()
@@ -138,31 +111,42 @@ class ValueController {
         val sheet = workbook.getSheetAt(0)
         val inputFormat = SimpleDateFormat("MM/dd/yyyy hh:mm:ss")
         val lastRowNum = sheet.lastRowNum
+        //val outputFormat = SimpleDateFormat("yyyy/MM/dd")
         val firstRow = sheet.getRow(0) // Obtén la primera fila
         val lastColumnNum = firstRow.lastCellNum
+        val registerValueList = mutableListOf<RegisterValue>()
+        println("Corrida1")
         try {
+
             val registerDateAllResponse = controllerDate!!.findAll()
             val registerValueAllResponse = valueTypeController!!.findAllValues()
+
             if ((registerDateAllResponse is ResponseEntity<*> && registerDateAllResponse.statusCode == HttpStatus.ACCEPTED) && registerValueAllResponse is ResponseEntity<*>) {
                 val responseBody = registerDateAllResponse.body as HashMap<*, *>
                 val registerDateAll = responseBody["result"] as List<*>
                 val responseBodyValue = registerValueAllResponse.body as HashMap<*, *>
                 val registerValueAll = responseBodyValue["result"] as List<*>
+
                 val registerValuesList = mutableListOf<RegisterValue>() // Lista para almacenar los objetos RegisterValue
+
                 for (columnIndex in 0 until lastColumnNum step 2) {
                     val cellValue = firstRow.getCell(columnIndex)?.stringCellValue?.trim()
                     if (cellValue.isNullOrEmpty()) {
+                        // La columna está vacía o es nula, detener el procesamiento
                         break
                     }
+
                     var primeraFila = true
                     val words = cellValue.split(" ")
                     val modifiedText = words.dropLast(1).joinToString(" ")
                     for (rowIndex in 0..lastRowNum) {
                         val row = sheet.getRow(rowIndex)
+
                         if (primeraFila) {
                             primeraFila = false
                             continue
                         }
+
                         val fecha = row.getCell(columnIndex)
                         val fechaa = fecha.stringCellValue
                         val valor = row.getCell(columnIndex + 1)
@@ -183,6 +167,7 @@ class ValueController {
                                 registerValue.registerDate = RegisterDate(id_Register, date)
                             }
                         }
+
                         for (registerValueType in registerValueAll) {
                             val id_ValueType = (registerValueType as ValuesType).id
                             val type_ValueType = registerValueType.description
@@ -190,7 +175,6 @@ class ValueController {
                             if (type_ValueType == modifiedText) {
                                 registerValue.valuesType = ValuesType(id_ValueType, type_ValueType)
                             }
-
                         }
 
                         registerValue.date = date
@@ -226,8 +210,6 @@ class ValueController {
         }
         println("Cargado satisfactoriamente")
     }
-
-
 
 }
 
