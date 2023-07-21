@@ -103,6 +103,14 @@ class ValueController {
         }
 
     }
+    @GetMapping("/by-date")
+    fun getValuesByDate(@RequestParam("date") dateString: String): ResponseEntity<Map<String, List<Double>>> {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val date = dateFormat.parse(dateString)
+        val valueMap = iValueServices!!.getValuesByDate(date)
+        return ResponseEntity.ok(valueMap)
+    }
+
 
     @PostMapping("/Import")
     fun ImportData(@RequestParam("file") file: MultipartFile) {
