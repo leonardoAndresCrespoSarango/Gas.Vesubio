@@ -1,6 +1,7 @@
 package com.gas.vesubio.models.dao
 
 import com.gas.vesubio.models.entity.RegisterDate
+import com.gas.vesubio.models.entity.RegisterValue
 import org.springframework.data.repository.CrudRepository
 import java.util.*
 
@@ -19,6 +20,8 @@ interface IDateDAO: CrudRepository<RegisterDate, Long> {
     /**
      * Para buscar si existe una fecha en la base de datos
      */
-    fun findByDate(date: Date): RegisterDate?
+
+
+    fun findByDate(date: Date): List<RegisterDate>
 
 }

@@ -18,6 +18,7 @@ class DateController {
 
     @Autowired
     private val iDatesServices:IDatesServices?=null
+    private val registerValueService: DatesServicesImpl?=null
     private val s:DatesServicesImpl?=null
     @GetMapping("/findDateById/{dateId}")
     fun findDateById(@PathVariable("dateId") dateId: Long): Any {
@@ -91,7 +92,7 @@ class DateController {
             val dateFormat = SimpleDateFormat("MM/dd/yyyy")
             val a= sheet.physicalNumberOfRows
             println(a)
-            for (rowNum in 1 until 40001) {
+            for (rowNum in 1 until 3) {
                 val row = sheet.getRow(rowNum)
                 val dateStr = row.getCell(0).stringCellValue
                 val date = dateFormat.parse(dateStr)
@@ -115,4 +116,6 @@ class DateController {
             ResponseEntity<Map<String, Any>>(response, HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
+
+
 }
