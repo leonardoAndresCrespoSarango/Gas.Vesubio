@@ -126,6 +126,7 @@ class ValuesTypeController {
                 // Manejar cualquier excepción al cerrar el workbook (opcional)
             }
         }
+        println("Cargados satisfactoriamente")
     }
 
 }

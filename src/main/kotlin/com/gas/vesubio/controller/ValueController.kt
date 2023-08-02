@@ -118,25 +118,20 @@ class ValueController {
         val firstRow = sheet.getRow(0) // Obtén la primera fila
         val lastColumnNum = firstRow.lastCellNum
         try {
-
             val registerDateAllResponse = controllerDate!!.findAll()
             val registerValueAllResponse = valueTypeController!!.findAllValues()
-
             if ((registerDateAllResponse is ResponseEntity<*> && registerDateAllResponse.statusCode == HttpStatus.ACCEPTED) && registerValueAllResponse is ResponseEntity<*>) {
                 val responseBody = registerDateAllResponse.body as HashMap<*, *>
                 val registerDateAll = responseBody["result"] as List<*>
                 val responseBodyValue = registerValueAllResponse.body as HashMap<*, *>
                 val registerValueAll = responseBodyValue["result"] as List<*>
-
                 val registerValuesList = mutableListOf<RegisterValue>() // Lista para almacenar los objetos RegisterValue
                 for (columnIndex in 0 until lastColumnNum step 2) {
                     val cellValue = firstRow.getCell(columnIndex)?.stringCellValue?.trim()
                     if (cellValue.isNullOrEmpty()) {
-
                         // La columna está vacía o es nula, detener el procesamiento
                         break
                     }
-
                     var primeraFila = true
                     val words = cellValue.split(" ")
                     val modifiedText = words.dropLast(1).joinToString(" ")
@@ -149,7 +144,6 @@ class ValueController {
                             primeraFila = false
                             continue
                         }
-
                         val fecha = row.getCell(columnIndex)
                         val fechaa: String
                         when (fecha.cellType) {
@@ -169,8 +163,6 @@ class ValueController {
                                 continue
                             }
                         }
-
-
                         //val fechaa = fecha.stringCellValue
                         val valor = row.getCell(columnIndex + 1)
                         val date = inputFormat.parse(fechaa)
@@ -196,14 +188,10 @@ class ValueController {
                                 continue
                             }
                         }
-
-
                         val registerValue = RegisterValue()
 
                         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S")
                         for (registerDate in registerDateAll) {
-
-
                             val id_Register = (registerDate as RegisterDate).id
 
                             val date_Register = registerDate.date
