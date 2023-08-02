@@ -7,15 +7,7 @@ package com.gas.vesubio.models.entity
 import java.io.Serializable
 import java.time.LocalDateTime
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.Table
-import javax.validation.constraints.Email
-import javax.validation.constraints.Size
-import javax.xml.crypto.Data
+import javax.persistence.*
 
 
 /**
@@ -71,6 +63,14 @@ class RegisterDate: Serializable {
 
     override fun toString(): String {
         return "RegisterDate(id=$id, date=$date)"
+    }
+
+    fun getFecha(): Date? {
+        return date
+    }
+
+    fun setFecha(fecha: Date) {
+        date = date
     }
         constructor (date: LocalDateTime )
 

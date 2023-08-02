@@ -21,6 +21,7 @@ import java.util.stream.Collectors
 import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext
 import javax.validation.Valid
+import org.apache.poi.ss.usermodel.CellType
 
 
 @RestController
@@ -29,13 +30,8 @@ class ValueController {
     @Autowired
     @PersistenceContext
     private lateinit var entityManager: EntityManager
-
-
     @Autowired
     private val iValueServices:IValuesServices?=null
-    private val datesServicesImpl: DatesServicesImpl?=null
-    private val dateController: DateController?=null
-    //private val iDatesServices:IDatesServices?=null
 
     @Autowired
     private lateinit var controllerDate: DateController
@@ -119,11 +115,8 @@ class ValueController {
         val sheet = workbook.getSheetAt(0)
         val inputFormat = SimpleDateFormat("MM/dd/yyyy hh:mm:ss")
         val lastRowNum = sheet.lastRowNum
-        //val outputFormat = SimpleDateFormat("yyyy/MM/dd")
         val firstRow = sheet.getRow(0) // Obtén la primera fila
         val lastColumnNum = firstRow.lastCellNum
-        val registerValueList = mutableListOf<RegisterValue>()
-        println("Corrida1")
         try {
 
             val registerDateAllResponse = controllerDate!!.findAll()
@@ -136,10 +129,10 @@ class ValueController {
                 val registerValueAll = responseBodyValue["result"] as List<*>
 
                 val registerValuesList = mutableListOf<RegisterValue>() // Lista para almacenar los objetos RegisterValue
-
                 for (columnIndex in 0 until lastColumnNum step 2) {
                     val cellValue = firstRow.getCell(columnIndex)?.stringCellValue?.trim()
                     if (cellValue.isNullOrEmpty()) {
+
                         // La columna está vacía o es nula, detener el procesamiento
                         break
                     }
@@ -147,7 +140,9 @@ class ValueController {
                     var primeraFila = true
                     val words = cellValue.split(" ")
                     val modifiedText = words.dropLast(1).joinToString(" ")
+
                     for (rowIndex in 0..lastRowNum) {
+
                         val row = sheet.getRow(rowIndex)
 
                         if (primeraFila) {
@@ -156,17 +151,61 @@ class ValueController {
                         }
 
                         val fecha = row.getCell(columnIndex)
-                        val fechaa = fecha.stringCellValue
+                        val fechaa: String
+                        when (fecha.cellType) {
+                            CellType.NUMERIC -> {
+                                // Si la celda es numérica, obtén su valor numérico y conviértelo a texto
+                                fechaa = inputFormat.format(fecha.dateCellValue)
+
+                            }
+                            CellType.STRING -> {
+                                // Si la celda es de tipo cadena, obtén su valor como texto
+                                fechaa = fecha.stringCellValue
+
+                            }
+                            else -> {
+                                // Maneja otros tipos de celdas según sea necesario
+                                println("Tipo de celda no compatible en la columna $columnIndex, fila $rowIndex")
+                                continue
+                            }
+                        }
+
+
+                        //val fechaa = fecha.stringCellValue
                         val valor = row.getCell(columnIndex + 1)
                         val date = inputFormat.parse(fechaa)
                         val dateR = SimpleDateFormat("MM/dd/yyyy").format(date)
-                        val value = valor.stringCellValue.replace(",", ".").toDouble()
+
+                        val value: Double
+                        when (valor.cellType) {
+                            CellType.NUMERIC -> {
+                                // Si la celda es numérica, obtenemos su valor directamente como double
+                                value = valor.numericCellValue
+                            }
+                            CellType.STRING -> {
+                                // Si la celda es de tipo cadena, intentamos convertir su valor a double
+                                try {
+                                    value = valor.stringCellValue.replace(",", ".").toDouble()
+                                } catch (e: NumberFormatException) {
+                                    println("Error al convertir el valor en la columna ${columnIndex + 1}, fila $rowIndex a double")
+                                    continue // O manejar el caso según sea necesario
+                                }
+                            }
+                            else -> {
+                                println("Tipo de celda no compatible en la columna ${columnIndex + 1}, fila $rowIndex")
+                                continue
+                            }
+                        }
+
 
                         val registerValue = RegisterValue()
 
                         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S")
                         for (registerDate in registerDateAll) {
+
+
                             val id_Register = (registerDate as RegisterDate).id
+
                             val date_Register = registerDate.date
                             val date = dateFormat.parse(date_Register.toString())
                             val dateFormatted = SimpleDateFormat("MM/dd/yyyy").format(date)
@@ -182,6 +221,7 @@ class ValueController {
 
                             if (type_ValueType == modifiedText) {
                                 registerValue.valuesType = ValuesType(id_ValueType, type_ValueType)
+
                             }
                         }
 
@@ -190,24 +230,18 @@ class ValueController {
 
                         registerValuesList.add(registerValue) // Agregar el objeto RegisterValue a la lista
 
-                        if (registerValuesList.size >= 1000) {
+                        if (registerValuesList.size >= 10) {
                         // Si la lista alcanza un tamaño de 1000, guardar los registros en lotes
                             iValueServices!!.saveAllValues(registerValuesList)
                            registerValuesList.clear() // Limpiar la lista después de guardar los registros
-                            println("subido")
                          }
                     }
                 }
-                //iValueServices!!.saveAllValues(registerValuesList)
-                //println(registerValuesList.size)
-
                 if (registerValuesList.isNotEmpty()) {
-                    // Guardar los registros restantes en la lista
-                    //println("guardar")
                     iValueServices!!.saveAllValues(registerValuesList)
                 }
             } else {
-                println("Error al obtener los datos de RegisterDate")
+                println("Error")
                 response["message"] = "Error al obtener los datos de RegisterDate"
             }
         } catch (e: Exception) {

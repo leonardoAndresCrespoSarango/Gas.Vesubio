@@ -5,6 +5,7 @@
 package com.gas.vesubio.models.entity
 
 import java.io.Serializable
+import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -45,6 +46,11 @@ class ValuesType: Serializable {
         if (id != null) {
             this.id = id
         }
+        this.description = description
+    }
+
+    constructor(description: String) {
+
         this.description = description
     }
 
